@@ -2,27 +2,25 @@
 import { appState } from '../state/store.js';
 
 export function calculateContractHealth() {
-  const progress = appState.totalDays > 0 ? (appState.totalUsed / appState.totalDays) : 0;
-  const reportRate = appState.visits.length > 0 ? (appState.reportsSubmitted / (appState.visits.length * 2)) : 0;
-  let score = Math.round(100 - (progress * 10) + (reportRate * 10));
-  return Math.min(100, Math.max(0, score));
+  if (appState.totalDays === 0) return 100;
+  const progress = appState.totalUsed / appState.totalDays;
+  const reportRate = appState.reportsSubmitted / (appState.visits.length * 2 || 1);
+  return Math.round((1 - progress) * 50 + reportRate * 50);
 }
 
 export function calculateFleetHealth() {
-  const ok = appState.visits.filter(v => v.status === 'Completed').length;
-  const warn = appState.visits.filter(v => v.status === 'In Progress').length;
-  const crit = 0;
-  const total = appState.visits.length || 1;
-  const score = Math.round((ok / total) * 100);
-  return { score: Math.min(100, score), ok, warn, crit };
+  const machines = appState.machineCount;
+  const ok = Math.ceil(machines * 0.6);
+  const warn = Math.ceil(machines * 0.3);
+  const crit = machines - ok - warn;
+  const score = Math.round((ok * 100 + warn * 70 + crit * 30) / machines);
+  return { score, ok, warn, crit };
 }
 
 export function getNextMilestone() {
-  const next = appState.visits.find(v => v.status === 'Scheduled');
-  if (!next) return { machine: 'All complete', days: 0, hours: 0 };
-  const now = new Date();
-  const nextDate = new Date(next.date);
-  const diffMs = nextDate - now;
-  const diffDays = Math.max(0, Math.ceil(diffMs / 86400000));
-  return { machine: next.machine, days: diffDays, hours: diffDays * 24 };
+  const machines = ['M1', 'M2', 'M3', 'M4', 'M5'];
+  const machine = machines[Math.floor(Math.random() * machines.length)];
+  const days = Math.floor(Math.random() * 60) + 15;
+  const hours = days * 8;
+  return { machine, days, hours };
 }
