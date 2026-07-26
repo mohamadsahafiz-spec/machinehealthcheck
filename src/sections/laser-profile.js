@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== LASER PROFILE MONITOR FUNCTIONS =====================
-function renderLaserProfileMonitor() {
+export function renderLaserProfileMonitor() {
   const container = document.getElementById('laserProfileGrid');
   if (!container) return;
   const lp = appState.laserProfile;
@@ -74,12 +74,12 @@ function renderLaserProfileMonitor() {
   container.innerHTML = html;
 }
 
-function openLaserProfileModal() {
+export function openLaserProfileModal() {
   renderLaserProfileEdit();
   openModalA11y('laserProfileModal');
 }
-function closeLaserProfileModal() { closeModalA11y('laserProfileModal'); }
-function renderLaserProfileEdit() {
+export function closeLaserProfileModal() { closeModalA11y('laserProfileModal'); }
+export function renderLaserProfileEdit() {
   const container = document.getElementById('laserProfileEditContent');
   const lp = appState.laserProfile;
   let html = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
@@ -114,7 +114,7 @@ function renderLaserProfileEdit() {
   html += '</div>';
   container.innerHTML = html;
 }
-function saveLaserProfileData() {
+export function saveLaserProfileData() {
   const lp = appState.laserProfile;
   lp.productName = document.getElementById('lpf-product').value;
   lp.waferSize = document.getElementById('lpf-wafer').value;

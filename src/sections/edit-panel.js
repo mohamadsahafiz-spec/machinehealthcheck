@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== EDIT PANEL =====================
-function toggleEditPanel() {
+export function toggleEditPanel() {
   const form = document.getElementById('editForm');
   const btn = document.getElementById('editToggleBtn');
   if (form.style.display === 'none') {
@@ -21,7 +21,7 @@ function toggleEditPanel() {
   }
 }
 
-function updateDashboard() {
+export function updateDashboard() {
   const startVal = document.getElementById('startDateInput').value;
   let totalDays = parseInt(document.getElementById('totalDaysInput').value) || 80;
   let machineCount = parseInt(document.getElementById('machineCountInput').value) || 5;

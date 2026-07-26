@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== RENDERERS =====================
-function renderKPIs() {
+export function renderKPIs() {
   const progressEl = document.getElementById('kpiProgress');
   if (!progressEl) return;
   const progress = appState.totalDays > 0 ? ((appState.totalUsed / appState.totalDays) * 100).toFixed(1) : 0;
@@ -81,7 +81,7 @@ function renderKPIs() {
   }
 }
 
-function renderMachineCards() {
+export function renderMachineCards() {
   const container = document.getElementById('machineCards');
   if (!container) return;
   let html = '';
@@ -153,7 +153,7 @@ function renderMachineCards() {
   container.innerHTML = html;
 }
 
-function renderTimeline() {
+export function renderTimeline() {
   const container = document.getElementById('timelineContent');
   if (!container) return;
   const recent = appState.visits.slice(0, 6);
@@ -184,7 +184,7 @@ function renderTimeline() {
   container.innerHTML = html;
 }
 
-function renderAlerts() {
+export function renderAlerts() {
   const container = document.getElementById('alertsContent');
   if (!container) return;
   const next = appState.visits.find(v => v.status === 'Scheduled');
@@ -224,7 +224,7 @@ function renderAlerts() {
   container.innerHTML = html;
 }
 
-function renderParams() {
+export function renderParams() {
   const container = document.getElementById('paramGrid');
   if (!container) return;
   let html = '';
@@ -258,7 +258,7 @@ function renderParams() {
   container.innerHTML = html;
 }
 
-function renderSpareParts() {
+export function renderSpareParts() {
   const container = document.getElementById('sparePartsList');
   if (!container) return;
   let html = '';
@@ -285,7 +285,7 @@ function renderSpareParts() {
   container.innerHTML = html;
 }
 
-function renderQuarterlyBudget() {
+export function renderQuarterlyBudget() {
   const container = document.getElementById('quarterlyBudget');
   if (!container) return;
   const quarters = {};
@@ -308,7 +308,7 @@ function renderQuarterlyBudget() {
   container.innerHTML = html;
 }
 
-function renderTerms() {
+export function renderTerms() {
   const container = document.getElementById('termsGrid');
   if (!container) return;
   let html = '';
@@ -321,7 +321,7 @@ function renderTerms() {
   container.innerHTML = html;
 }
 
-function renderInsights() {
+export function renderInsights() {
   const container = document.getElementById('insightsGrid');
   if (!container) return;
   let html = '';

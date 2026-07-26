@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== LASER POWER MONITOR FUNCTIONS =====================
-function renderLaserPowerMonitor() {
+export function renderLaserPowerMonitor() {
   const container = document.getElementById('laserPowerGrid');
   if (!container) return;
   let html = '';
@@ -47,12 +47,12 @@ function renderLaserPowerMonitor() {
   container.innerHTML = html;
 }
 
-function openLaserPowerModal() {
+export function openLaserPowerModal() {
   renderLaserPowerEdit();
   openModalA11y('laserPowerModal');
 }
-function closeLaserPowerModal() { closeModalA11y('laserPowerModal'); }
-function renderLaserPowerEdit() {
+export function closeLaserPowerModal() { closeModalA11y('laserPowerModal'); }
+export function renderLaserPowerEdit() {
   const container = document.getElementById('laserPowerEditContent');
   let html = '';
   ['laser1', 'laser2'].forEach((laserKey, li) => {
@@ -75,7 +75,7 @@ function renderLaserPowerEdit() {
   });
   container.innerHTML = html;
 }
-function saveLaserPowerData() {
+export function saveLaserPowerData() {
   ['laser1', 'laser2'].forEach((laserKey, li) => {
     const laser = appState.laserPowerMonitor[laserKey];
     laser.masks.forEach((mask, mi) => {

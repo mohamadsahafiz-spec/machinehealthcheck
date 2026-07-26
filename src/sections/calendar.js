@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== CALENDAR MODAL =====================
-function openCalendar() {
+export function openCalendar() {
   lastFocusedElement = document.activeElement;
   const quarters = {};
   appState.visits.forEach(v => {
@@ -61,5 +61,5 @@ function openCalendar() {
   openModalA11y('calendarModal');
 }
 
-function closeCalendar() { closeModalA11y('calendarModal'); }
+export function closeCalendar() { closeModalA11y('calendarModal'); }
 

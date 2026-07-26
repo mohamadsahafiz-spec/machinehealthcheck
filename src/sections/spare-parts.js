@@ -10,14 +10,14 @@ import { buildSchedule } from '../core/schedule.js';
 import { renderSpareParts, renderAlerts } from './renderers.js';
 
 // ===================== SPARE PARTS EDIT MODAL =====================
-function openSparePartsModal() {
+export function openSparePartsModal() {
   renderSparePartsEditList();
   openModalA11y('sparePartsModal');
 }
 
-function closeSparePartsModal() { closeModalA11y('sparePartsModal'); }
+export function closeSparePartsModal() { closeModalA11y('sparePartsModal'); }
 
-function renderSparePartsEditList() {
+export function renderSparePartsEditList() {
   const container = document.getElementById('sparePartsEditList');
   let html = '';
   appState.spareParts.forEach((sp, idx) => {
@@ -42,7 +42,7 @@ function renderSparePartsEditList() {
   container.innerHTML = html;
 }
 
-function addSparePart() {
+export function addSparePart() {
   const newId = appState.spareParts.length > 0 ? Math.max(...appState.spareParts.map(p => p.id)) + 1 : 1;
   appState.spareParts.push({
     id: newId,
@@ -56,12 +56,12 @@ function addSparePart() {
   renderSparePartsEditList();
 }
 
-function removeSparePart(idx) {
+export function removeSparePart(idx) {
   appState.spareParts.splice(idx, 1);
   renderSparePartsEditList();
 }
 
-function saveSpareParts() {
+export function saveSpareParts() {
   const newParts = [];
   appState.spareParts.forEach((sp, idx) => {
     const part = document.getElementById('sp-part-' + idx)?.value || sp.part;

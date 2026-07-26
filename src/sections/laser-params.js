@@ -10,14 +10,14 @@ import { buildSchedule } from '../core/schedule.js';
 import { renderParams } from './renderers.js';
 
 // ===================== LASER PARAM EDIT MODAL =====================
-function openLaserParamModal() {
+export function openLaserParamModal() {
   renderLaserParamEditList();
   openModalA11y('laserParamModal');
 }
 
-function closeLaserParamModal() { closeModalA11y('laserParamModal'); }
+export function closeLaserParamModal() { closeModalA11y('laserParamModal'); }
 
-function renderLaserParamEditList() {
+export function renderLaserParamEditList() {
   const container = document.getElementById('laserParamEditList');
   let html = '';
   appState.laserParams.forEach((p, idx) => {
@@ -45,7 +45,7 @@ function renderLaserParamEditList() {
   container.innerHTML = html;
 }
 
-function addLaserParam() {
+export function addLaserParam() {
   const newId = appState.laserParams.length > 0 ? Math.max(...appState.laserParams.map(p => p.id)) + 1 : 1;
   appState.laserParams.push({
     id: newId,
@@ -60,12 +60,12 @@ function addLaserParam() {
   renderLaserParamEditList();
 }
 
-function removeLaserParam(idx) {
+export function removeLaserParam(idx) {
   appState.laserParams.splice(idx, 1);
   renderLaserParamEditList();
 }
 
-function saveLaserParams() {
+export function saveLaserParams() {
   const newParams = [];
   appState.laserParams.forEach((p, idx) => {
     const param = document.getElementById('lp-param-' + idx)?.value || p.param;

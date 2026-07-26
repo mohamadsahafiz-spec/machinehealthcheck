@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== FOCUS OPTIMIZATION RENDERERS =====================
-function renderFocusOptimization() {
+export function renderFocusOptimization() {
   const container = document.getElementById('focusOptimizationGrid');
   if (!container) return;
   const fo = appState.focusOptimization;
@@ -49,7 +49,7 @@ function renderFocusOptimization() {
   container.innerHTML = html;
 }
 
-function renderLaserDefocus() {
+export function renderLaserDefocus() {
   const container = document.getElementById('laserDefocusGrid');
   if (!container) return;
   const ld = appState.focusOptimization.laserDefocus;
@@ -81,12 +81,12 @@ function renderLaserDefocus() {
   container.innerHTML = html;
 }
 
-function openFocusModal() {
+export function openFocusModal() {
   renderFocusEdit();
   openModalA11y('focusModal');
 }
-function closeFocusModal() { closeModalA11y('focusModal'); }
-function renderFocusEdit() {
+export function closeFocusModal() { closeModalA11y('focusModal'); }
+export function renderFocusEdit() {
   const container = document.getElementById('focusEditContent');
   const fo = appState.focusOptimization;
   let html = '<div class="mb-4"><span class="edit-label">Report Description</span><textarea class="edit-textarea" id="fo-desc" rows="2">' + fo.summary.description + '</textarea></div>';
@@ -157,26 +157,26 @@ async function handleDefocusImage(input, idx) {
     slot.innerHTML = '<img src="' + objectUrl + '" style="max-height:70px; border-radius:6px;">'; slot.classList.add('has-image');
   } catch (e) { console.error('Defocus image upload failed', e); }
 }
-function addFocusMeasurement() {
+export function addFocusMeasurement() {
   const newId = appState.focusOptimization.measurements.length > 0 ? Math.max(...appState.focusOptimization.measurements.map(m => m.id)) + 1 : 1;
   appState.focusOptimization.measurements.push({ id: newId, title: 'New Measurement', value: '-', tolerance: '-', status: 'Pass', image: '', note: '' });
   renderFocusEdit();
 }
-function removeFocusMeasurement(idx) {
+export function removeFocusMeasurement(idx) {
   appState.focusOptimization.measurements.splice(idx, 1);
   renderFocusEdit();
 }
-function addDefocusItem() {
+export function addDefocusItem() {
   const items = appState.focusOptimization.laserDefocus.items;
   const newId = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
   items.push({ id: newId, defocus: '0 μm', viaSize: '-', roundness: '-', quality: 'Good', image: '', desc: '' });
   renderFocusEdit();
 }
-function removeDefocusItem(idx) {
+export function removeDefocusItem(idx) {
   appState.focusOptimization.laserDefocus.items.splice(idx, 1);
   renderFocusEdit();
 }
-function saveFocusData() {
+export function saveFocusData() {
   const fo = appState.focusOptimization;
   fo.summary.description = document.getElementById('fo-desc').value;
   fo.measurements.forEach((m, idx) => {

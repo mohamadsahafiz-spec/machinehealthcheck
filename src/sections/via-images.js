@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== VIA IMAGE COMPARISON FUNCTIONS =====================
-function renderViaImageReport() {
+export function renderViaImageReport() {
   const container = document.getElementById('viaImageReport');
   if (!container) return;
   const vi = appState.viaImages;
@@ -89,12 +89,12 @@ function renderViaImageReport() {
   container.innerHTML = html;
 }
 
-function openViaImageModal() {
+export function openViaImageModal() {
   renderViaImageEdit();
   openModalA11y('viaImageModal');
 }
-function closeViaImageModal() { closeModalA11y('viaImageModal'); }
-function renderViaImageEdit() {
+export function closeViaImageModal() { closeModalA11y('viaImageModal'); }
+export function renderViaImageEdit() {
   const container = document.getElementById('viaImageEditContent');
   const vi = appState.viaImages;
   let html = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
@@ -154,16 +154,16 @@ async function handleViaImage(input, type) {
     console.error('Via image upload failed', e);
   }
 }
-function addViaImage(type) {
+export function addViaImage(type) {
   const inputId = type === 'before' ? 'vi-bimg-add' : 'vi-aimg-add';
   document.getElementById(inputId).click();
 }
-function removeViaImage(idx, type) {
+export function removeViaImage(idx, type) {
   appState.viaImages[type + 'Imgs'].splice(idx, 1);
   renderViaImageEdit();
 }
 
-function saveViaImageData() {
+export function saveViaImageData() {
   const vi = appState.viaImages;
   vi.beforeDate = document.getElementById('vi-bdate').value;
   vi.afterDate = document.getElementById('vi-adate').value;

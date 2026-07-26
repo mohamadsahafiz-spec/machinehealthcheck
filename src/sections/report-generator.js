@@ -43,7 +43,7 @@ async function handleImageUpload(input, slotId) {
 }
 
 // ===================== UV LASER HOURS =====================
-function updateUVLaserDisplay() {
+export function updateUVLaserDisplay() {
   const machines = ['M1', 'M2', 'M3', 'M4', 'M5'];
   let anyWarning = false;
   let anyAlarm = false;
@@ -89,7 +89,7 @@ function updateUVLaserDisplay() {
 }
 
 // ===================== CDA MONITORING =====================
-function updateCDAGraph() {
+export function updateCDAGraph() {
   const before = [
     parseFloat(document.getElementById('cdaBeforeD1').value) || 0,
     parseFloat(document.getElementById('cdaBeforeD2').value) || 0,
@@ -130,7 +130,7 @@ function updateCDAGraph() {
 }
 
 // ===================== COOLING SYSTEM =====================
-function updateCoolingDisplay() {
+export function updateCoolingDisplay() {
   const channels = [];
   for (let c = 1; c <= 6; c++) {
     const setVal = parseFloat(document.getElementById('coolSet' + c).value) || 0;
@@ -200,7 +200,7 @@ function updateCoolingDisplay() {
 }
 
 // ===================== HEALTH SCORE =====================
-function updateHealthScoreDisplay() {
+export function updateHealthScoreDisplay() {
   const score = document.getElementById('healthScore').value;
   document.getElementById('healthScoreDisplay').textContent = score;
   const display = document.getElementById('healthScoreDisplay');
@@ -210,7 +210,7 @@ function updateHealthScoreDisplay() {
 }
 
 // ===================== PARAMETER EDITING =====================
-function renderParameterEditList() {
+export function renderParameterEditList() {
   const container = document.getElementById('parameterEditList');
   let html = '<div style="overflow-x: auto;"><table style="width:100%; font-size: 12px;">';
   html += '<thead><tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">';
@@ -243,20 +243,20 @@ function renderParameterEditList() {
   container.innerHTML = html;
 }
 
-function addParameter() {
+export function addParameter() {
   const newId = reportState.parameters.length > 0 ? Math.max(...reportState.parameters.map(p => p.id)) + 1 : 1;
   reportState.parameters.push({ id: newId, param: 'New Parameter', before: '-', after: '-', target: '-', tolerance: '-', unit: '', status: 'Pass', trend: 'stable', rootCause: '', action: '' });
   renderParameterEditList();
   updateCharts();
 }
 
-function removeParameter(idx) {
+export function removeParameter(idx) {
   reportState.parameters.splice(idx, 1);
   renderParameterEditList();
   updateCharts();
 }
 
-function saveParameters() {
+export function saveParameters() {
   const newParams = [];
   reportState.parameters.forEach((p, idx) => {
     newParams.push({
@@ -278,7 +278,7 @@ function saveParameters() {
 // ===================== CHARTS =====================
 let radarChart, barChart, trendChart, cdaChart, coolingChart;
 
-function updateCharts() {
+export function updateCharts() {
   saveParameters();
   const radarCtx = document.getElementById('radarChartPreview');
   if (radarChart) radarChart.destroy();
@@ -311,7 +311,7 @@ function updateCharts() {
 }
 
 // ===================== LOCAL STORAGE =====================
-function saveReportToLocalStorage() {
+export function saveReportToLocalStorage() {
   saveParameters();
   const data = {
     fse: document.getElementById('reportFSE').value,
@@ -372,7 +372,7 @@ function saveReportToLocalStorage() {
   setTimeout(() => { btn.innerHTML = originalText; btn.classList.remove('bg-neon-green/20'); }, 2000);
 }
 
-function loadReportFromLocalStorage() {
+export function loadReportFromLocalStorage() {
   const saved = localStorage.getItem('eoTechnicsReportDraft');
   if (!saved) {
     alert('No saved draft found. Start a new report.');
@@ -444,7 +444,7 @@ function loadReportFromLocalStorage() {
 }
 
 // ===================== MODAL FUNCTIONS =====================
-function openReportGenerator() {
+export function openReportGenerator() {
   renderParameterEditList();
   updateHealthScoreDisplay();
   updateUVLaserDisplay();
@@ -457,7 +457,7 @@ function openReportGenerator() {
   }, 300);
 }
 
-function closeReportGenerator() {
+export function closeReportGenerator() {
   if (radarChart) { radarChart.destroy(); radarChart = null; }
   if (barChart) { barChart.destroy(); barChart = null; }
   if (trendChart) { trendChart.destroy(); trendChart = null; }
@@ -466,10 +466,10 @@ function closeReportGenerator() {
   closeModalA11y('reportGeneratorModal');
 }
 
-function updateMachinePreview() {}
+export function updateMachinePreview() {}
 
 // ===================== SECTION TOGGLE HELPERS =====================
-function getSelectedSections() {
+export function getSelectedSections() {
   const checkboxes = document.querySelectorAll('.report-section-toggle');
   const selected = {};
   checkboxes.forEach(cb => {
@@ -478,14 +478,14 @@ function getSelectedSections() {
   return selected;
 }
 
-function selectAllSections(select) {
+export function selectAllSections(select) {
   document.querySelectorAll('.report-section-toggle').forEach(cb => {
     cb.checked = select;
   });
   updateSectionCount();
 }
 
-function updateSectionCount() {
+export function updateSectionCount() {
   const count = document.querySelectorAll('.report-section-toggle:checked').length;
   const total = document.querySelectorAll('.report-section-toggle').length;
   const el = document.getElementById('sectionCount');
@@ -500,7 +500,7 @@ document.addEventListener('change', function(e) {
 });
 
 // ===================== REPORT GENERATION =====================
-function copyReportLink() {
+export function copyReportLink() {
   const reportData = {
     fse: document.getElementById('reportFSE').value,
     date: document.getElementById('reportDate').value,
@@ -517,7 +517,7 @@ function copyReportLink() {
   });
 }
 
-function generateReportPreview() {
+export function generateReportPreview() {
   saveParameters();
   const sections = getSelectedSections();
   const fse = document.getElementById('reportFSE').value;
@@ -1246,7 +1246,7 @@ function generateReportPreview() {
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 150);
 }
-function printReport() {
+export function printReport() {
   const container = document.getElementById('reportPreviewContainer');
   if (container.innerHTML === '' || container.style.display === 'none') {
     generateReportPreview();

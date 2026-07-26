@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== POWER OFFSET RENDERERS =====================
-function renderPowerOffset() {
+export function renderPowerOffset() {
   const container = document.getElementById('powerOffsetGrid');
   if (!container) return;
   const po = appState.powerOffset;
@@ -65,12 +65,12 @@ function renderPowerOffset() {
   container.innerHTML = html;
 }
 
-function openPowerOffsetModal() {
+export function openPowerOffsetModal() {
   renderPowerOffsetEdit();
   openModalA11y('powerOffsetModal');
 }
-function closePowerOffsetModal() { closeModalA11y('powerOffsetModal'); }
-function renderPowerOffsetEdit() {
+export function closePowerOffsetModal() { closeModalA11y('powerOffsetModal'); }
+export function renderPowerOffsetEdit() {
   const container = document.getElementById('powerOffsetEditContent');
   const po = appState.powerOffset;
   let html = '<div class="mb-4"><span class="edit-label">Report Description</span><textarea class="edit-textarea" id="po-desc" rows="2">' + po.summary.description + '</textarea></div>';
@@ -109,17 +109,17 @@ async function handlePowerOffsetImage(input, idx) {
     slot.innerHTML = '<img src="' + objectUrl + '" style="max-height:70px; border-radius:6px;">'; slot.classList.add('has-image');
   } catch (e) { console.error('Power offset image upload failed', e); }
 }
-function addPowerOffsetItem() {
+export function addPowerOffsetItem() {
   const items = appState.powerOffset.items;
   const newId = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
   items.push({ id: newId, channel: 'New Channel', offset: '0%', target: '±3%', compensated: 'No', before: '0%', after: '0%', image: '', desc: '' });
   renderPowerOffsetEdit();
 }
-function removePowerOffsetItem(idx) {
+export function removePowerOffsetItem(idx) {
   appState.powerOffset.items.splice(idx, 1);
   renderPowerOffsetEdit();
 }
-function savePowerOffsetData() {
+export function savePowerOffsetData() {
   const po = appState.powerOffset;
   po.summary.description = document.getElementById('po-desc').value;
   po.items.forEach((item, idx) => {

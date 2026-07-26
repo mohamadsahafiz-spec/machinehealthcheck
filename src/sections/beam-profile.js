@@ -12,7 +12,7 @@ let machineTrendChart = null;
 
 
 // ===================== BEAM PROFILE MONITOR FUNCTIONS =====================
-function renderBeamProfileReport() {
+export function renderBeamProfileReport() {
   const container = document.getElementById('beamProfileReport');
   if (!container) return;
   const bp = appState.beamProfiles;
@@ -57,7 +57,7 @@ function renderBeamProfileReport() {
   container.innerHTML = html;
 }
 
-function openMachineDetailModal(machineNum) {
+export function openMachineDetailModal(machineNum) {
   const modal = document.getElementById('machineDetailModal');
   const mVisits = appState.visits.filter(v => v.machineNum === machineNum);
   const done = mVisits.filter(v => v.status === 'Completed').length;
@@ -120,17 +120,17 @@ function openMachineDetailModal(machineNum) {
   openModalA11y('machineDetailModal');
 }
 
-function closeMachineDetailModal() {
+export function closeMachineDetailModal() {
   if (machineTrendChart) { machineTrendChart.destroy(); machineTrendChart = null; }
   closeModalA11y('machineDetailModal');
 }
 
-function openBeamProfileModal() {
+export function openBeamProfileModal() {
   renderBeamProfileEdit();
   openModalA11y('beamProfileModal');
 }
-function closeBeamProfileModal() { closeModalA11y('beamProfileModal'); }
-function renderBeamProfileEdit() {
+export function closeBeamProfileModal() { closeModalA11y('beamProfileModal'); }
+export function renderBeamProfileEdit() {
   const container = document.getElementById('beamProfileEditContent');
   const bp = appState.beamProfiles;
   let html = '';
@@ -199,7 +199,7 @@ async function handleBeamImage(input, laserKey, idx, type) {
     console.error('Beam image upload failed', e);
   }
 }
-function saveBeamProfileData() {
+export function saveBeamProfileData() {
   ['laser1', 'laser2'].forEach((laserKey, li) => {
     const laser = appState.beamProfiles[laserKey];
     laser.title = document.getElementById('bp-title-' + laserKey).value;
@@ -218,7 +218,7 @@ function saveBeamProfileData() {
   addChangeLogEntry({ action: 'update', machine: 'Beam Profiles', field: 'Beam Profile Monitor', before: 'Edited', after: 'Saved' });
   closeBeamProfileModal();
 }
-function addBeamItem(laserKey) {
+export function addBeamItem(laserKey) {
   const laser = appState.beamProfiles[laserKey];
   const newIdx = laser.items.length > 0 ? Math.max(...laser.items.map(m => m.idx)) + 1 : 1;
   laser.items.push({
@@ -229,7 +229,7 @@ function addBeamItem(laserKey) {
   });
   renderBeamProfileEdit();
 }
-function removeBeamItem(laserKey, idx) {
+export function removeBeamItem(laserKey, idx) {
   const laser = appState.beamProfiles[laserKey];
   if (laser.items.length <= 1) {
     alert('Cannot delete the last item. Each laser must have at least one mask.');

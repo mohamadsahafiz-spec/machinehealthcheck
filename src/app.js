@@ -49,6 +49,8 @@ Object.assign(window, Accessibility);
 // Wire change-log modal globally (expected by legacy HTML)
 window.openChangeLogModal = openChangeLogModal;
 window.closeChangeLogModal = closeChangeLogModal;
+window.scrollToSection = scrollToSection;
+window.toggleMobileSidebar = toggleMobileSidebar;
 
 // ===================== RENDER ORCHESTRATOR =====================
 function renderAll() {

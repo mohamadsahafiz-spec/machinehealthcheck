@@ -9,7 +9,7 @@ import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from 
 import { buildSchedule } from '../core/schedule.js';
 
 // ===================== MACHINE SEQUENCE =====================
-function renderMachineSequence() {
+export function renderMachineSequence() {
   const container = document.getElementById('machineSequenceDisplay');
   if (!container) return;
   const seq = appState.machineSequence;
@@ -23,7 +23,7 @@ function renderMachineSequence() {
   container.innerHTML = html;
 }
 
-function updateMachineSequence() {
+export function updateMachineSequence() {
   const input = document.getElementById('machineSequenceInput').value;
   let seq = input.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n) && n > 0 && n <= appState.machineCount);
   seq = [...new Set(seq)];
