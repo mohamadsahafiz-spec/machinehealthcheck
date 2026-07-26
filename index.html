@@ -7,44 +7,43 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    :root {
-      --neon-blue: #00d4ff;
-      --neon-purple: #a855f7;
-      --neon-green: #22c55e;
-      --neon-amber: #f59e0b;
-      --neon-red: #ef4444;
-      --dark-900: #0f172a;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'neon-blue': '#00d4ff',
+            'neon-purple': '#a855f7',
+            'neon-green': '#22c55e',
+            'neon-amber': '#f59e0b',
+            'neon-red': '#ef4444',
+            'dark-900': '#0f172a',
+            'dark-800': '#1e293b',
+          }
+        }
+      }
     }
-    body { background: var(--dark-900); color: #e2e8f0; }
-    .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); }
-    .text-neon-blue { color: var(--neon-blue); }
-    .text-neon-purple { color: var(--neon-purple); }
-    .text-neon-green { color: var(--neon-green); }
-    .text-neon-amber { color: var(--neon-amber); }
-    .text-neon-red { color: var(--neon-red); }
-    .bg-neon-blue { background-color: var(--neon-blue); }
-    .bg-neon-purple { background-color: var(--neon-purple); }
-    .bg-neon-green { background-color: var(--neon-green); }
-    .bg-neon-amber { background-color: var(--neon-amber); }
-    .bg-neon-red { background-color: var(--neon-red); }
-    .border-neon-blue { border-color: var(--neon-blue); }
-    .border-neon-purple { border-color: var(--neon-purple); }
-    .border-neon-green { border-color: var(--neon-green); }
-    .border-neon-amber { border-color: var(--neon-amber); }
-    .border-neon-red { border-color: var(--neon-red); }
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 50; }
-    .modal-overlay.active { display: flex; align-items: center; justify-content: center; }
+  </script>
+  <style>
+    body { background: #0f172a; color: #e2e8f0; }
+    .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 10px; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .sidebar-item:hover, .sidebar-item.active { background: rgba(0,212,255,0.1); color: #00d4ff; }
+    .machine-card { transition: all 0.2s; }
+    .machine-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .timeline-line { position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.1); }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50; overflow-y: auto; padding: 40px 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; max-width: 1100px; width: 100%; margin: auto; padding: 28px; }
     .severity-critical { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
     .severity-warning { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
-    .machine-seq-badge { padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; }
-    .timeline-line { position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.1); }
+    .machine-seq-badge { padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; }
     .visit-row { display: flex; justify-content: space-between; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; background: rgba(30,41,59,0.4); }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
     .status-scheduled { background: #64748b; }
-    .status-completed { background: var(--neon-green); }
-    .status-progress { background: var(--neon-amber); }
-    .machine-badge { padding: 2px 8px; border-radius: 6px; }
+    .status-completed { background: #22c55e; }
+    .status-progress { background: #f59e0b; }
+    .machine-badge { padding: 2px 8px; border-radius: 6px; background: rgba(255,255,255,0.1); font-size: 11px; }
     .quarter-block { background: rgba(30,41,59,0.4); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
     .param-edit-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr auto; gap: 8px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .param-edit-input { background: rgba(30,41,59,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 6px 10px; color: white; font-size: 12px; }
@@ -56,19 +55,721 @@
     .edit-textarea { background: rgba(30,41,59,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px 12px; color: white; font-size: 13px; width: 100%; resize: vertical; }
     .edit-label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
     .image-upload-slot { background: rgba(30,41,59,0.4); border: 2px dashed rgba(255,255,255,0.1); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; min-height: 120px; }
-    .image-upload-slot:hover { border-color: var(--neon-blue); background: rgba(0,212,255,0.05); }
-    .image-upload-slot.has-image { border-style: solid; border-color: var(--neon-green); }
+    .image-upload-slot:hover { border-color: #00d4ff; background: rgba(0,212,255,0.05); }
+    .image-upload-slot.has-image { border-style: solid; border-color: #22c55e; }
     .btn-sm { padding: 4px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; border: none; }
-    .btn-danger { background: rgba(239,68,68,0.2); color: var(--neon-red); }
+    .btn-danger { background: rgba(239,68,68,0.2); color: #ef4444; }
     .btn-danger:hover { background: rgba(239,68,68,0.3); }
-    .btn-add { background: rgba(34,197,94,0.2); color: var(--neon-green); }
+    .btn-add { background: rgba(34,197,94,0.2); color: #22c55e; }
     .btn-add:hover { background: rgba(34,197,94,0.3); }
     .report-preview { background: white; color: #0f172a; }
+    .close-btn { position: absolute; top: 16px; right: 20px; background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; }
+    .close-btn:hover { color: white; }
     @media print { body * { visibility: hidden; } .report-preview, .report-preview * { visibility: visible; } .report-preview { position: absolute; left: 0; top: 0; width: 100%; } }
   </style>
 </head>
 <body class="min-h-screen">
-  <!-- Main entry point — loads as ES module -->
-  <script type="module" src="src/app.js"></script>
+
+<!-- ===================== SIDEBAR ===================== -->
+<aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-dark-800 border-r border-white/5 z-40 overflow-y-auto hidden md:block">
+  <div class="p-6">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center">
+        <i class="fas fa-laser-pointer text-white text-sm"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-white text-sm">EO Technics</h1>
+        <p class="text-[10px] text-slate-400">WLVIA Health Check</p>
+      </div>
+    </div>
+    <p id="sidebarContractInfo" class="text-[10px] text-slate-500 mb-4 font-mono">WK30 2026 → WK30 2028</p>
+    <nav class="space-y-1">
+      <div class="sidebar-item active" data-section="dashboardTop" onclick="scrollToSection('dashboardTop')"><i class="fas fa-home w-5"></i><span class="text-sm">Dashboard</span></div>
+      <div class="sidebar-item" data-section="executiveSummary" onclick="scrollToSection('executiveSummary')"><i class="fas fa-chart-pie w-5"></i><span class="text-sm">Executive</span></div>
+      <div class="sidebar-item" data-section="fleetStatus" onclick="scrollToSection('fleetStatus')"><i class="fas fa-server w-5"></i><span class="text-sm">Fleet</span></div>
+      <div class="sidebar-item" data-section="laserParams" onclick="scrollToSection('laserParams')"><i class="fas fa-sliders-h w-5"></i><span class="text-sm">Laser Params</span></div>
+      <div class="sidebar-item" data-section="laserPower" onclick="scrollToSection('laserPower')"><i class="fas fa-bolt w-5"></i><span class="text-sm">Laser Power</span></div>
+      <div class="sidebar-item" data-section="laserProfile" onclick="scrollToSection('laserProfile')"><i class="fas fa-wave-square w-5"></i><span class="text-sm">Laser Profile</span></div>
+      <div class="sidebar-item" data-section="viaImages" onclick="scrollToSection('viaImages')"><i class="fas fa-microscope w-5"></i><span class="text-sm">Via Images</span></div>
+      <div class="sidebar-item" data-section="beamProfile" onclick="scrollToSection('beamProfile')"><i class="fas fa-bullseye w-5"></i><span class="text-sm">Beam Profile</span></div>
+      <div class="sidebar-item" data-section="focusOptimization" onclick="scrollToSection('focusOptimization')"><i class="fas fa-crosshairs w-5"></i><span class="text-sm">Focus</span></div>
+      <div class="sidebar-item" data-section="powerOffset" onclick="scrollToSection('powerOffset')"><i class="fas fa-tachometer-alt w-5"></i><span class="text-sm">Power Offset</span></div>
+      <div class="sidebar-item" data-section="spareParts" onclick="scrollToSection('spareParts')"><i class="fas fa-boxes w-5"></i><span class="text-sm">Spare Parts</span></div>
+      <div class="sidebar-item" data-section="budgetQuarterly" onclick="scrollToSection('budgetQuarterly')"><i class="fas fa-wallet w-5"></i><span class="text-sm">Budget</span></div>
+      <div class="sidebar-item" data-section="buyoffReport" onclick="scrollToSection('buyoffReport')"><i class="fas fa-file-alt w-5"></i><span class="text-sm">Buyoff Report</span></div>
+      <div class="sidebar-item" data-section="contractTerms" onclick="scrollToSection('contractTerms')"><i class="fas fa-file-contract w-5"></i><span class="text-sm">Terms</span></div>
+      <div class="sidebar-item" data-section="fseInsights" onclick="scrollToSection('fseInsights')"><i class="fas fa-lightbulb w-5"></i><span class="text-sm">Insights</span></div>
+    </nav>
+    <div class="mt-8 pt-6 border-t border-white/5">
+      <button onclick="openChangeLogModal()" class="w-full py-2 rounded-lg bg-slate-700/50 text-slate-400 text-xs hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2">
+        <i class="fas fa-history"></i> Change Log
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile sidebar toggle -->
+<button onclick="toggleMobileSidebar()" class="md:hidden fixed top-4 left-4 z-50 w-10 h-10 rounded-lg bg-dark-800 border border-white/10 flex items-center justify-center text-slate-400">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<main class="md:ml-64 p-6 max-w-7xl mx-auto">
+
+  <!-- Dashboard Top -->
+  <section id="dashboardTop" class="mb-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div>
+        <h2 class="text-2xl font-bold text-white">Dashboard</h2>
+        <p class="text-sm text-slate-400 mt-1">Contract Period: <span id="headerPeriod" class="text-neon-blue font-mono">WK30 2026 → WK30 2028</span></p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-slate-500 font-mono">Current: <span id="headerCurrentWeek" class="text-white">WK30 2026</span></span>
+        <button onclick="openCalendar()" class="px-4 py-2 rounded-lg bg-neon-blue/10 text-neon-blue border border-neon-blue/20 text-sm hover:bg-neon-blue/20 transition-all">
+          <i class="fas fa-calendar-alt mr-2"></i>Calendar <span id="calendarBtnText" class="text-xs opacity-70">(80 days · 0 visits · 5 machines)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Machine Sequence -->
+    <div class="glass rounded-xl p-4 mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-semibold text-white">Machine Sequence</h3>
+        <button onclick="updateMachineSequence()" class="text-xs text-neon-blue hover:text-white transition-all">Update</button>
+      </div>
+      <div id="machineSequenceDisplay" class="flex items-center gap-2 flex-wrap"></div>
+      <div class="mt-3 flex items-center gap-2">
+        <input id="machineSequenceInput" type="text" value="1,2,3,4,5" class="edit-input text-xs max-w-xs">
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Progress</p>
+        <p id="kpiProgress" class="text-2xl font-bold text-neon-blue font-mono">0%</p>
+        <div class="w-full bg-slate-700 rounded-full h-1.5 mt-2"><div id="progressBar" class="bg-neon-blue h-1.5 rounded-full transition-all" style="width:0%"></div></div>
+        <p id="kpiProgressDetail" class="text-[10px] text-slate-500 mt-1">0 of 80 days consumed</p>
+      </div>
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Remaining</p>
+        <p id="kpiRemaining" class="text-2xl font-bold text-neon-green font-mono">80</p>
+        <div class="w-full bg-slate-700 rounded-full h-1.5 mt-2"><div id="remainingBar" class="bg-neon-green h-1.5 rounded-full transition-all" style="width:100%"></div></div>
+        <p id="kpiRemainingText" class="text-[10px] text-slate-500 mt-1">Budget healthy — 100% remaining</p>
+      </div>
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Machines</p>
+        <p id="machineCountLabel" class="text-lg font-bold text-white">5 Machines</p>
+        <p id="totalVisitsDisplay" class="text-[10px] text-slate-500 mt-1">0 visits</p>
+      </div>
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Done</p>
+        <p id="kpiDone" class="text-2xl font-bold text-neon-green font-mono">0</p>
+      </div>
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Active</p>
+        <p id="kpiActive" class="text-2xl font-bold text-neon-amber font-mono">0</p>
+      </div>
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Planned</p>
+        <p id="kpiPlanned" class="text-2xl font-bold text-slate-400 font-mono">0</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Next Visit</p>
+        <p id="kpiNext" class="text-sm font-bold text-white">All complete</p>
+      </div>
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Reports</p>
+        <p class="text-2xl font-bold text-neon-purple font-mono"><span id="kpiReports">0</span><span id="kpiReportsTotal" class="text-sm text-slate-500"> / 0 submitted</span></p>
+        <div class="w-full bg-slate-700 rounded-full h-1.5 mt-2"><div id="reportBar" class="bg-neon-purple h-1.5 rounded-full transition-all" style="width:0%"></div></div>
+      </div>
+      <div class="glass rounded-xl p-4">
+        <p class="text-[10px] text-slate-500 uppercase mb-1">Day Pattern</p>
+        <p id="patternDisplay" class="text-sm font-bold text-white font-mono">3,2,3,2</p>
+      </div>
+    </div>
+
+    <!-- Contract Health -->
+    <div id="contractHealthBadge" class="flex items-center gap-3 px-4 py-2 rounded-xl bg-gradient-to-r from-neon-green/10 to-emerald-500/10 border border-neon-green/30 mb-6">
+      <i class="fas fa-heartbeat text-neon-green"></i>
+      <div>
+        <p class="text-sm font-medium text-white">Contract Health Score</p>
+        <p id="contractHealthScore" class="text-2xl font-bold text-neon-green font-mono">100<span class="text-xs text-slate-400">/100</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Executive Summary -->
+  <section id="executiveSummary" class="mb-8">
+    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-chart-pie text-neon-blue"></i> Executive Summary</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="glass rounded-xl p-5">
+        <p class="text-[10px] text-slate-500 uppercase mb-2">Fleet Health Score</p>
+        <p id="execFleetScore" class="text-3xl font-bold text-neon-blue font-mono">100</p>
+        <div class="w-full bg-slate-700 rounded-full h-2 mt-2"><div id="execFleetBar" class="bg-neon-blue h-2 rounded-full transition-all" style="width:100%"></div></div>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <p class="text-[10px] text-slate-500 uppercase mb-2">Machine Status</p>
+        <div class="flex gap-4 mt-2">
+          <div class="text-center"><p id="execMachinesOK" class="text-xl font-bold text-neon-green font-mono">5</p><p class="text-[10px] text-slate-500">OK</p></div>
+          <div class="text-center"><p id="execMachinesWarn" class="text-xl font-bold text-neon-amber font-mono">0</p><p class="text-[10px] text-slate-500">Warn</p></div>
+          <div class="text-center"><p id="execMachinesCrit" class="text-xl font-bold text-neon-red font-mono">0</p><p class="text-[10px] text-slate-500">Crit</p></div>
+        </div>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <div id="execNextMilestone">
+          <i class="fas fa-flag-checkered text-neon-amber mt-0.5"></i>
+          <div>
+            <p class="text-sm font-medium text-white">Next Critical Milestone</p>
+            <p class="text-xs text-slate-400">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fleet Status -->
+  <section id="fleetStatus" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-server text-neon-purple"></i> Machine Fleet Status</h3>
+    </div>
+    <div id="machineCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>
+
+  <!-- Timeline & Alerts -->
+  <section class="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-stream text-neon-blue"></i> Recent Timeline</h3>
+      <div class="glass rounded-xl p-5 relative pl-12">
+        <div class="timeline-line"></div>
+        <div id="timelineContent"></div>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-bell text-neon-amber"></i> Alerts & Actions</h3>
+      <div id="alertsContent" class="space-y-3"></div>
+    </div>
+  </section>
+
+  <!-- Laser Parameters -->
+  <section id="laserParams" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-sliders-h text-neon-blue"></i> Laser Parameters</h3>
+      <button onclick="openLaserParamModal()" class="px-3 py-1.5 rounded-lg bg-neon-blue/10 text-neon-blue border border-neon-blue/20 text-xs hover:bg-neon-blue/20 transition-all"><i class="fas fa-edit mr-1"></i>Edit</button>
+    </div>
+    <div id="paramGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>
+
+  <!-- Laser Power Monitor -->
+  <section id="laserPower" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-bolt text-neon-blue"></i> Laser Power Monitor</h3>
+      <button onclick="openLaserPowerModal()" class="px-3 py-1.5 rounded-lg bg-neon-blue/10 text-neon-blue border border-neon-blue/20 text-xs hover:bg-neon-blue/20 transition-all"><i class="fas fa-edit mr-1"></i>Edit</button>
+    </div>
+    <div id="laserPowerGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+  </section>
+
+  <!-- Laser Profile Monitor -->
+  <section id="laserProfile" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-wave-square text-neon-purple"></i> Laser Profile Monitor</h3>
+      <button onclick="openLaserProfileModal()" class="px-3 py-1.5 rounded-lg bg-neon-purple/10 text-neon-purple border border-neon-purple/20 text-xs hover:bg-neon-purple/20 transition-all"><i class="fas fa-edit mr-1"></i>Edit</button>
+    </div>
+    <div id="laserProfileGrid"></div>
+  </section>
+
+  <!-- Via Image Comparison -->
+  <section id="viaImages" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-microscope text-neon-amber"></i> Via Image Comparison</h3>
+      <button onclick="openViaImageModal()" class="px-3 py-1.5 rounded-lg bg-neon-amber/10 text-neon-amber border border-neon-amber/20 text-xs hover:bg-neon-amber/20 transition-all"><i class="fas fa-edit mr-1"></i>Edit</button>
+    </div>
+    <div id="viaImageReport"></div>
+  </section>
+
+  <!-- Beam Profile Monitor -->
+  <section id="beamProfile" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-bullseye text-neon-green"></i> Beam Profile Monitor</h3>
+      <button onclick="openBeamProfileModal()" class="px-3 py-1.5 rounded-lg bg-neon-green/10 text-neon-green border border-neon-green/20 text-xs hover:bg-neon-green/20 transition-all"><i class="fas fa-edit mr-1"></i>Edit</button>
+    </div>
+    <div id="beamProfileReport"></div>
+  </section>
+
+  <!-- Focus Optimization -->
+  <section id="focusOptimization" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-crosshairs text-neon-blue"></i> Focus Optimization</h3>
+      <button onclick="openFocusModal()" class="px-3 py-1.5 rounded-lg bg-neon-blue/10 text-neon-blue border border-neon-blue/20 text-xs hover:bg-neon-blue/20 transition-all"><i class="fas fa-edit mr-1"></i>Edit</button>
+    </div>
+    <div id="focusOptimizationGrid"></div>
+    <h4 class="text-md font-semibold text-white mt-6 mb-3">Laser Defocus Analysis</h4>
+    <div id="laserDefocusGrid"></div>
+  </section>
+
+  <!-- Power Offset -->
+  <section id="powerOffset" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-tachometer-alt text-neon-purple"></i> Power Offset Monitor</h3>
+      <button onclick="openPowerOffsetModal()" class="px-3 py-1.5 rounded-lg bg-neon-purple/10 text-neon-purple border border-neon-purple/20 text-xs hover:bg-neon-purple/20 transition-all"><i class="fas fa-edit mr-1"></i>Edit</button>
+    </div>
+    <div id="powerOffsetGrid"></div>
+  </section>
+
+  <!-- Spare Parts -->
+  <section id="spareParts" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-boxes text-slate-400"></i> Spare Parts & Consumables</h3>
+      <button onclick="openSparePartsModal()" class="px-3 py-1.5 rounded-lg bg-slate-700/50 text-slate-400 border border-slate-600 text-xs hover:bg-slate-700 hover:text-white transition-all"><i class="fas fa-edit mr-1"></i>Edit</button>
+    </div>
+    <div id="sparePartsList" class="space-y-2"></div>
+  </section>
+
+  <!-- Quarterly Budget -->
+  <section id="budgetQuarterly" class="mb-8">
+    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-wallet text-neon-blue"></i> Quarterly Budget</h3>
+    <div class="glass rounded-xl p-5">
+      <div id="quarterlyBudget"></div>
+    </div>
+  </section>
+
+  <!-- Buyoff Report -->
+  <section id="buyoffReport" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-file-alt text-neon-green"></i> Buyoff Report Generator</h3>
+      <div class="flex gap-2">
+        <button onclick="openReportGenerator()" class="px-4 py-2 rounded-lg bg-neon-green/10 text-neon-green border border-neon-green/20 text-sm hover:bg-neon-green/20 transition-all"><i class="fas fa-plus mr-1"></i>New Report</button>
+        <button onclick="printReport()" class="px-4 py-2 rounded-lg bg-slate-700/50 text-slate-400 border border-slate-600 text-sm hover:bg-slate-700 hover:text-white transition-all"><i class="fas fa-print mr-1"></i>Print</button>
+      </div>
+    </div>
+    <div id="reportPreviewContainer" class="hidden"></div>
+  </section>
+
+  <!-- Contract Terms -->
+  <section id="contractTerms" class="mb-8">
+    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-file-contract text-slate-400"></i> Contract Terms</h3>
+    <div id="termsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>
+
+  <!-- FSE Insights -->
+  <section id="fseInsights" class="mb-8">
+    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-lightbulb text-neon-amber"></i> FSE Insights</h3>
+    <div id="insightsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>
+
+  <!-- Satisfaction -->
+  <section id="satisfaction" class="mb-8">
+    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-smile text-neon-green"></i> Satisfaction</h3>
+    <div class="glass rounded-xl p-5 text-center">
+      <p class="text-sm text-slate-400">Customer satisfaction metrics will appear here.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 pt-6 pb-8">
+    <p id="footerText" class="text-xs text-slate-500 text-center">Contract: 80 days over 2 years (0 visits) • 5 Machines • Seq: 1→2→3→4→5 • Excludes BMD250WM</p>
+    <p id="modalSubtitle" class="text-xs text-slate-600 text-center mt-1 hidden">80 days · 0 visits · 5 machines · Seq: 1→2→3→4→5 · 2026–2028</p>
+  </footer>
+
+  <!-- Edit Panel -->
+  <div class="fixed bottom-6 right-6 z-30">
+    <button id="editToggleBtn" onclick="toggleEditPanel()" class="w-12 h-12 rounded-full bg-neon-blue text-white shadow-lg shadow-neon-blue/30 flex items-center justify-center hover:scale-110 transition-transform">
+      <i class="fas fa-cog"></i>
+    </button>
+    <div id="editForm" class="hidden absolute bottom-16 right-0 w-80 glass rounded-xl p-5 border border-white/10">
+      <h4 class="text-sm font-bold text-white mb-3">Dashboard Settings</h4>
+      <div class="space-y-3">
+        <div><label class="edit-label">Start Date</label><input id="startDateInput" type="date" class="edit-input text-xs" value="2026-07-20"></div>
+        <div><label class="edit-label">Total Days</label><input id="totalDaysInput" type="number" class="edit-input text-xs" value="80"></div>
+        <div><label class="edit-label">Machine Count</label><input id="machineCountInput" type="number" class="edit-input text-xs" value="5"></div>
+        <div><label class="edit-label">Day Pattern</label><input id="dayPatternInput" type="text" class="edit-input text-xs" value="3,2,3,2"></div>
+        <button onclick="updateDashboard()" class="w-full py-2 rounded-lg bg-neon-blue text-white text-xs font-semibold hover:bg-neon-blue/80 transition-all">Update Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- Calendar Modal -->
+<div id="calendarModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative">
+    <button class="close-btn" onclick="closeCalendar()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Service Calendar</h2>
+    <div id="calendarQuarterly"></div>
+    <div class="mt-6 overflow-x-auto">
+      <table class="w-full text-xs text-left">
+        <thead class="text-slate-400 border-b border-white/10">
+          <tr><th class="pb-2">Week</th><th class="pb-2">Date</th><th class="pb-2">Machine</th><th class="pb-2">Quarter</th><th class="pb-2">Days</th><th class="pb-2">Status</th><th class="pb-2">Activities</th></tr>
+        </thead>
+        <tbody id="calendarTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Laser Param Edit Modal -->
+<div id="laserParamModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-4xl">
+    <button class="close-btn" onclick="closeLaserParamModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Edit Laser Parameters</h2>
+    <div id="laserParamEditList" class="space-y-2 mb-4"></div>
+    <div class="flex gap-2">
+      <button onclick="addLaserParam()" class="btn-sm btn-add"><i class="fas fa-plus mr-1"></i>Add Parameter</button>
+      <button onclick="saveLaserParams()" class="btn-sm bg-neon-blue/20 text-neon-blue"><i class="fas fa-save mr-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Spare Parts Edit Modal -->
+<div id="sparePartsModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-4xl">
+    <button class="close-btn" onclick="closeSparePartsModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Edit Spare Parts</h2>
+    <div id="sparePartsEditList" class="space-y-2 mb-4"></div>
+    <div class="flex gap-2">
+      <button onclick="addSparePart()" class="btn-sm btn-add"><i class="fas fa-plus mr-1"></i>Add Part</button>
+      <button onclick="saveSpareParts()" class="btn-sm bg-neon-blue/20 text-neon-blue"><i class="fas fa-save mr-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Report Generator Modal -->
+<div id="reportGeneratorModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-5xl">
+    <button class="close-btn" onclick="closeReportGenerator()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-2">Buyoff Report Generator</h2>
+    <p class="text-xs text-slate-400 mb-4">Enhanced Report v2.0 — Select sections to include</p>
+
+    <!-- Section Toggles -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="basicInfo" checked> Basic Info</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="executiveSummary" checked> Executive</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="fleetStatus" checked> Fleet</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="uvLaser" checked> UV Laser</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="criticalFindings" checked> Critical</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="cdaMonitoring" checked> CDA</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="coolingSystem" checked> Cooling</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="visualEvidence" checked> Visual</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="laserPower" checked> Laser Power</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="laserProfile" checked> Laser Profile</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="viaImages" checked> Via Images</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="beamProfile" checked> Beam Profile</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="spareParts" checked> Spare Parts</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="laserParams" checked> Laser Params</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="rootCause" checked> Root Cause</label>
+      <label class="flex items-center gap-1 text-xs text-slate-300 cursor-pointer"><input type="checkbox" class="report-section-toggle" data-section="charts" checked> Charts</label>
+    </div>
+    <div class="flex gap-2 mb-4">
+      <button onclick="selectAllSections(true)" class="btn-sm bg-slate-700/50 text-slate-400">Select All</button>
+      <button onclick="selectAllSections(false)" class="btn-sm bg-slate-700/50 text-slate-400">Deselect All</button>
+      <span id="sectionCount" class="text-xs text-slate-500 self-center ml-auto">16 of 16 sections selected</span>
+    </div>
+
+    <!-- Basic Info -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+      <div><label class="edit-label">FSE Name</label><input id="reportFSE" type="text" class="edit-input text-xs" value="John Doe"></div>
+      <div><label class="edit-label">Date</label><input id="reportDate" type="date" class="edit-input text-xs" value="2026-07-27"></div>
+      <div><label class="edit-label">Machine ID</label><select id="reportMachineId" class="edit-input text-xs"><option value="1">Machine 1</option><option value="2">Machine 2</option><option value="3">Machine 3</option><option value="4">Machine 4</option><option value="5">Machine 5</option></select></div>
+      <div><label class="edit-label">Week</label><input id="reportWeek" type="text" class="edit-input text-xs" value="WK30 2026"></div>
+    </div>
+
+    <!-- Health Score -->
+    <div class="mb-4">
+      <label class="edit-label">Health Score</label>
+      <div class="flex items-center gap-3">
+        <input id="healthScore" type="range" min="0" max="100" value="92" class="flex-1" oninput="updateHealthScoreDisplay()">
+        <span id="healthScoreDisplay" class="text-2xl font-bold font-mono text-neon-green">92</span>
+      </div>
+    </div>
+
+    <!-- Findings -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+      <div><label class="edit-label">Findings Summary</label><textarea id="reportFindings" class="edit-textarea text-xs" rows="2">Machine is in good condition. All parameters within specification.</textarea></div>
+      <div><label class="edit-label">Root Cause Analysis</label><textarea id="reportRootCause" class="edit-textarea text-xs" rows="2">No significant root causes identified.</textarea></div>
+      <div><label class="edit-label">Actions Taken</label><textarea id="reportActions" class="edit-textarea text-xs" rows="2">Routine maintenance completed.</textarea></div>
+      <div><label class="edit-label">Recommendations</label><textarea id="reportRecommendations" class="edit-textarea text-xs" rows="2">Continue monitoring. Next visit scheduled per contract.</textarea></div>
+    </div>
+
+    <!-- Critical Findings -->
+    <div class="mb-4">
+      <h4 class="text-sm font-bold text-white mb-2">Critical Findings</h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div><label class="edit-label">Critical Part</label><input id="criticalPart" type="text" class="edit-input text-xs" value="UV Laser"></div>
+        <div><label class="edit-label">Urgency</label><select id="criticalUrgency" class="edit-input text-xs"><option value="ASAP">ASAP</option><option value="Next quarter">Next Quarter</option><option value="Monitor">Monitor</option></select></div>
+        <div><label class="edit-label">Warning Finding</label><input id="warningFinding" type="text" class="edit-input text-xs" value="Lens condition requires monitoring"></div>
+      </div>
+      <div class="mt-2"><label class="edit-label">Critical Finding Details</label><textarea id="criticalFinding" class="edit-textarea text-xs" rows="2">UV Laser approaching end of life. Plan replacement.</textarea></div>
+    </div>
+
+    <!-- UV Laser Hours -->
+    <div class="mb-4">
+      <h4 class="text-sm font-bold text-white mb-2">UV Laser Life Monitor</h4>
+      <div class="grid grid-cols-5 gap-3">
+        <div><label class="edit-label text-[9px]">M1 Hours</label><input id="uvHoursM1" type="number" class="edit-input text-xs" value="18500" onchange="updateUVLaserDisplay()"><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div id="uvBarM1" class="bg-neon-green h-1.5 rounded-full" style="width:74%"></div></div><p id="uvStatusM1" class="text-[10px] text-neon-green mt-1">6500h remaining</p></div>
+        <div><label class="edit-label text-[9px]">M2 Hours</label><input id="uvHoursM2" type="number" class="edit-input text-xs" value="21200" onchange="updateUVLaserDisplay()"><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div id="uvBarM2" class="bg-neon-amber h-1.5 rounded-full" style="width:85%"></div></div><p id="uvStatusM2" class="text-[10px] text-neon-amber mt-1">3800h remaining</p></div>
+        <div><label class="edit-label text-[9px]">M3 Hours</label><input id="uvHoursM3" type="number" class="edit-input text-xs" value="19800" onchange="updateUVLaserDisplay()"><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div id="uvBarM3" class="bg-neon-green h-1.5 rounded-full" style="width:79%"></div></div><p id="uvStatusM3" class="text-[10px] text-neon-green mt-1">5200h remaining</p></div>
+        <div><label class="edit-label text-[9px]">M4 Hours</label><input id="uvHoursM4" type="number" class="edit-input text-xs" value="15400" onchange="updateUVLaserDisplay()"><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div id="uvBarM4" class="bg-neon-green h-1.5 rounded-full" style="width:62%"></div></div><p id="uvStatusM4" class="text-[10px] text-neon-green mt-1">9600h remaining</p></div>
+        <div><label class="edit-label text-[9px]">M5 Hours</label><input id="uvHoursM5" type="number" class="edit-input text-xs" value="17600" onchange="updateUVLaserDisplay()"><div class="w-full bg-slate-700 rounded-full h-1.5 mt-1"><div id="uvBarM5" class="bg-neon-green h-1.5 rounded-full" style="width:70%"></div></div><p id="uvStatusM5" class="text-[10px] text-neon-green mt-1">7400h remaining</p></div>
+      </div>
+      <div id="uvLaserAlertBanner" class="mt-3 p-3 rounded-lg severity-warning hidden">
+        <p id="uvAlertText" class="text-xs text-neon-amber"></p>
+      </div>
+    </div>
+
+    <!-- CDA Monitoring -->
+    <div class="mb-4">
+      <h4 class="text-sm font-bold text-white mb-2">CDA Pressure Monitoring</h4>
+      <div class="grid grid-cols-2 gap-3 mb-2">
+        <div>
+          <p class="text-[10px] text-slate-500 mb-1">Before Service (kPa)</p>
+          <div class="grid grid-cols-3 gap-2">
+            <div><input id="cdaBeforeD1" type="number" class="edit-input text-xs" value="520" onchange="updateCDAGraph()"></div>
+            <div><input id="cdaBeforeD2" type="number" class="edit-input text-xs" value="510" onchange="updateCDAGraph()"></div>
+            <div><input id="cdaBeforeD3" type="number" class="edit-input text-xs" value="515" onchange="updateCDAGraph()"></div>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-1">Avg: <input id="cdaBeforeAvg" type="text" class="edit-input text-xs w-16 inline" value="515.0" readonly> kPa</p>
+        </div>
+        <div>
+          <p class="text-[10px] text-slate-500 mb-1">After Service (kPa)</p>
+          <div class="grid grid-cols-3 gap-2">
+            <div><input id="cdaAfterD1" type="number" class="edit-input text-xs" value="680" onchange="updateCDAGraph()"></div>
+            <div><input id="cdaAfterD2" type="number" class="edit-input text-xs" value="685" onchange="updateCDAGraph()"></div>
+            <div><input id="cdaAfterD3" type="number" class="edit-input text-xs" value="682" onchange="updateCDAGraph()"></div>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-1">Avg: <input id="cdaAfterAvg" type="text" class="edit-input text-xs w-16 inline" value="682.3" readonly> kPa</p>
+        </div>
+      </div>
+      <textarea id="cdaNotes" class="edit-textarea text-xs" rows="2">CDA pressure improved significantly after filter replacement and line inspection.</textarea>
+      <div class="mt-2" style="height:200px;"><canvas id="cdaChartPreview"></canvas></div>
+    </div>
+
+    <!-- Cooling System -->
+    <div class="mb-4">
+      <h4 class="text-sm font-bold text-white mb-2">Cooling System (6 Channels)</h4>
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-2">
+        <div class="glass rounded-lg p-2">
+          <p class="text-[10px] text-slate-500 mb-1 text-center">Ch 1</p>
+          <input id="coolSet1" type="number" class="edit-input text-[10px] mb-1" value="20" onchange="updateCoolingDisplay()" placeholder="Set">
+          <input id="coolAlarm1" type="number" class="edit-input text-[10px] mb-1" value="28" onchange="updateCoolingDisplay()" placeholder="Alarm">
+          <input id="coolD1C1" type="number" class="edit-input text-[10px] mb-1" value="21" onchange="updateCoolingDisplay()" placeholder="D1">
+          <input id="coolD2C1" type="number" class="edit-input text-[10px] mb-1" value="22" onchange="updateCoolingDisplay()" placeholder="D2">
+          <input id="coolD3C1" type="number" class="edit-input text-[10px]" value="21" onchange="updateCoolingDisplay()" placeholder="D3">
+          <p id="coolStatus1" class="text-[10px] text-center mt-1 text-neon-green">OK</p>
+        </div>
+        <div class="glass rounded-lg p-2">
+          <p class="text-[10px] text-slate-500 mb-1 text-center">Ch 2</p>
+          <input id="coolSet2" type="number" class="edit-input text-[10px] mb-1" value="20" onchange="updateCoolingDisplay()" placeholder="Set">
+          <input id="coolAlarm2" type="number" class="edit-input text-[10px] mb-1" value="28" onchange="updateCoolingDisplay()" placeholder="Alarm">
+          <input id="coolD1C2" type="number" class="edit-input text-[10px] mb-1" value="21" onchange="updateCoolingDisplay()" placeholder="D1">
+          <input id="coolD2C2" type="number" class="edit-input text-[10px] mb-1" value="22" onchange="updateCoolingDisplay()" placeholder="D2">
+          <input id="coolD3C2" type="number" class="edit-input text-[10px]" value="21" onchange="updateCoolingDisplay()" placeholder="D3">
+          <p id="coolStatus2" class="text-[10px] text-center mt-1 text-neon-green">OK</p>
+        </div>
+        <div class="glass rounded-lg p-2">
+          <p class="text-[10px] text-slate-500 mb-1 text-center">Ch 3</p>
+          <input id="coolSet3" type="number" class="edit-input text-[10px] mb-1" value="20" onchange="updateCoolingDisplay()" placeholder="Set">
+          <input id="coolAlarm3" type="number" class="edit-input text-[10px] mb-1" value="28" onchange="updateCoolingDisplay()" placeholder="Alarm">
+          <input id="coolD1C3" type="number" class="edit-input text-[10px] mb-1" value="21" onchange="updateCoolingDisplay()" placeholder="D1">
+          <input id="coolD2C3" type="number" class="edit-input text-[10px] mb-1" value="22" onchange="updateCoolingDisplay()" placeholder="D2">
+          <input id="coolD3C3" type="number" class="edit-input text-[10px]" value="21" onchange="updateCoolingDisplay()" placeholder="D3">
+          <p id="coolStatus3" class="text-[10px] text-center mt-1 text-neon-green">OK</p>
+        </div>
+        <div class="glass rounded-lg p-2">
+          <p class="text-[10px] text-slate-500 mb-1 text-center">Ch 4</p>
+          <input id="coolSet4" type="number" class="edit-input text-[10px] mb-1" value="20" onchange="updateCoolingDisplay()" placeholder="Set">
+          <input id="coolAlarm4" type="number" class="edit-input text-[10px] mb-1" value="28" onchange="updateCoolingDisplay()" placeholder="Alarm">
+          <input id="coolD1C4" type="number" class="edit-input text-[10px] mb-1" value="21" onchange="updateCoolingDisplay()" placeholder="D1">
+          <input id="coolD2C4" type="number" class="edit-input text-[10px] mb-1" value="22" onchange="updateCoolingDisplay()" placeholder="D2">
+          <input id="coolD3C4" type="number" class="edit-input text-[10px]" value="21" onchange="updateCoolingDisplay()" placeholder="D3">
+          <p id="coolStatus4" class="text-[10px] text-center mt-1 text-neon-green">OK</p>
+        </div>
+        <div class="glass rounded-lg p-2">
+          <p class="text-[10px] text-slate-500 mb-1 text-center">Ch 5</p>
+          <input id="coolSet5" type="number" class="edit-input text-[10px] mb-1" value="20" onchange="updateCoolingDisplay()" placeholder="Set">
+          <input id="coolAlarm5" type="number" class="edit-input text-[10px] mb-1" value="28" onchange="updateCoolingDisplay()" placeholder="Alarm">
+          <input id="coolD1C5" type="number" class="edit-input text-[10px] mb-1" value="21" onchange="updateCoolingDisplay()" placeholder="D1">
+          <input id="coolD2C5" type="number" class="edit-input text-[10px] mb-1" value="22" onchange="updateCoolingDisplay()" placeholder="D2">
+          <input id="coolD3C5" type="number" class="edit-input text-[10px]" value="21" onchange="updateCoolingDisplay()" placeholder="D3">
+          <p id="coolStatus5" class="text-[10px] text-center mt-1 text-neon-green">OK</p>
+        </div>
+        <div class="glass rounded-lg p-2">
+          <p class="text-[10px] text-slate-500 mb-1 text-center">Ch 6</p>
+          <input id="coolSet6" type="number" class="edit-input text-[10px] mb-1" value="20" onchange="updateCoolingDisplay()" placeholder="Set">
+          <input id="coolAlarm6" type="number" class="edit-input text-[10px] mb-1" value="28" onchange="updateCoolingDisplay()" placeholder="Alarm">
+          <input id="coolD1C6" type="number" class="edit-input text-[10px] mb-1" value="21" onchange="updateCoolingDisplay()" placeholder="D1">
+          <input id="coolD2C6" type="number" class="edit-input text-[10px] mb-1" value="22" onchange="updateCoolingDisplay()" placeholder="D2">
+          <input id="coolD3C6" type="number" class="edit-input text-[10px]" value="21" onchange="updateCoolingDisplay()" placeholder="D3">
+          <p id="coolStatus6" class="text-[10px] text-center mt-1 text-neon-green">OK</p>
+        </div>
+      </div>
+      <textarea id="coolingNotes" class="edit-textarea text-xs" rows="2">All cooling channels operating within normal parameters.</textarea>
+      <div class="mt-2" style="height:250px;"><canvas id="coolingChartPreview"></canvas></div>
+    </div>
+
+    <!-- Parameter Edit -->
+    <div class="mb-4">
+      <h4 class="text-sm font-bold text-white mb-2">Laser Parameters</h4>
+      <div id="parameterEditList" class="overflow-x-auto"></div>
+      <div class="flex gap-2 mt-2">
+        <button onclick="addParameter()" class="btn-sm btn-add"><i class="fas fa-plus mr-1"></i>Add Parameter</button>
+      </div>
+    </div>
+
+    <!-- Charts Preview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div style="height:200px;"><canvas id="radarChartPreview"></canvas></div>
+      <div style="height:200px;"><canvas id="barChartPreview"></canvas></div>
+      <div style="height:200px;"><canvas id="trendChartPreview"></canvas></div>
+    </div>
+
+    <!-- Visual Evidence Uploads -->
+    <div class="mb-4">
+      <h4 class="text-sm font-bold text-white mb-2">Visual Evidence</h4>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div><label class="edit-label text-[9px]">Beam Before</label><div class="image-upload-slot" id="slot-beam-before" onclick="document.getElementById('file-beam-before').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-beam-before" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-beam-before')"></div></div>
+        <div><label class="edit-label text-[9px]">Beam After</label><div class="image-upload-slot" id="slot-beam-after" onclick="document.getElementById('file-beam-after').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-beam-after" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-beam-after')"></div></div>
+        <div><label class="edit-label text-[9px]">Via Before</label><div class="image-upload-slot" id="slot-via-before" onclick="document.getElementById('file-via-before').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-via-before" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-via-before')"></div></div>
+        <div><label class="edit-label text-[9px]">Via After</label><div class="image-upload-slot" id="slot-via-after" onclick="document.getElementById('file-via-after').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-via-after" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-via-after')"></div></div>
+        <div><label class="edit-label text-[9px]">Calibration</label><div class="image-upload-slot" id="slot-calibration" onclick="document.getElementById('file-calibration').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-calibration" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-calibration')"></div></div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+        <div><label class="edit-label text-[9px]">Shape Before</label><div class="image-upload-slot" id="slot-shape-before" onclick="document.getElementById('file-shape-before').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-shape-before" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-shape-before')"></div></div>
+        <div><label class="edit-label text-[9px]">Shape After</label><div class="image-upload-slot" id="slot-shape-after" onclick="document.getElementById('file-shape-after').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-shape-after" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-shape-after')"></div></div>
+        <div><label class="edit-label text-[9px]">Pad Before</label><div class="image-upload-slot" id="slot-pad-before" onclick="document.getElementById('file-pad-before').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-pad-before" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-pad-before')"></div></div>
+        <div><label class="edit-label text-[9px]">Pad After</label><div class="image-upload-slot" id="slot-pad-after" onclick="document.getElementById('file-pad-after').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-pad-after" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-pad-after')"></div></div>
+      </div>
+      <div class="mt-2"><label class="edit-label text-[9px]">Cooling Graph</label><div class="image-upload-slot" id="slot-cooling" onclick="document.getElementById('file-cooling').click()"><i class="fas fa-camera text-slate-500 text-lg"></i><p class="text-[9px] text-slate-400">Upload</p><input id="file-cooling" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this,'slot-cooling')"></div></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-wrap gap-2">
+      <button onclick="saveReportToLocalStorage()" class="px-4 py-2 rounded-lg bg-neon-blue text-white text-sm font-semibold hover:bg-neon-blue/80 transition-all"><i class="fas fa-save mr-1"></i>Save Draft</button>
+      <button onclick="loadReportFromLocalStorage()" class="px-4 py-2 rounded-lg bg-slate-700/50 text-slate-400 border border-slate-600 text-sm hover:bg-slate-700 hover:text-white transition-all"><i class="fas fa-download mr-1"></i>Load Draft</button>
+      <button onclick="copyReportLink()" class="px-4 py-2 rounded-lg bg-slate-700/50 text-slate-400 border border-slate-600 text-sm hover:bg-slate-700 hover:text-white transition-all"><i class="fas fa-link mr-1"></i>Copy Link</button>
+      <button onclick="generateReportPreview()" class="px-4 py-2 rounded-lg bg-neon-green text-white text-sm font-semibold hover:bg-neon-green/80 transition-all ml-auto"><i class="fas fa-eye mr-1"></i>Generate Preview</button>
+    </div>
+    <div id="autoSaveIndicator" class="mt-2 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-neon-green animate-pulse"></span><span class="text-xs text-slate-500">Auto-save enabled</span></div>
+  </div>
+</div>
+
+<!-- Laser Power Modal -->
+<div id="laserPowerModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-4xl">
+    <button class="close-btn" onclick="closeLaserPowerModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Edit Laser Power Data</h2>
+    <div id="laserPowerEditContent"></div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="saveLaserPowerData()" class="btn-sm bg-neon-blue/20 text-neon-blue"><i class="fas fa-save mr-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Laser Profile Modal -->
+<div id="laserProfileModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-4xl">
+    <button class="close-btn" onclick="closeLaserProfileModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Edit Laser Profile</h2>
+    <div id="laserProfileEditContent"></div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="saveLaserProfileData()" class="btn-sm bg-neon-purple/20 text-neon-purple"><i class="fas fa-save mr-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Via Image Modal -->
+<div id="viaImageModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-4xl">
+    <button class="close-btn" onclick="closeViaImageModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Edit Via Images</h2>
+    <div id="viaImageEditContent"></div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="saveViaImageData()" class="btn-sm bg-neon-amber/20 text-neon-amber"><i class="fas fa-save mr-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Beam Profile Modal -->
+<div id="beamProfileModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-5xl">
+    <button class="close-btn" onclick="closeBeamProfileModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Edit Beam Profiles</h2>
+    <div id="beamProfileEditContent"></div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="saveBeamProfileData()" class="btn-sm bg-neon-green/20 text-neon-green"><i class="fas fa-save mr-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Focus Modal -->
+<div id="focusModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-4xl">
+    <button class="close-btn" onclick="closeFocusModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Edit Focus Optimization</h2>
+    <div id="focusEditContent"></div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="saveFocusData()" class="btn-sm bg-neon-blue/20 text-neon-blue"><i class="fas fa-save mr-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Power Offset Modal -->
+<div id="powerOffsetModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-4xl">
+    <button class="close-btn" onclick="closePowerOffsetModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Edit Power Offset</h2>
+    <div id="powerOffsetEditContent"></div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="savePowerOffsetData()" class="btn-sm bg-neon-purple/20 text-neon-purple"><i class="fas fa-save mr-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Machine Detail Modal -->
+<div id="machineDetailModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-3xl">
+    <button class="close-btn" onclick="closeMachineDetailModal()"><i class="fas fa-times"></i></button>
+    <h2 id="machineDetailTitle" class="text-xl font-bold text-white mb-4">Machine Detail</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+      <div class="glass rounded-lg p-3 text-center"><p class="text-[10px] text-slate-500">Visits Done</p><p id="mdVisitsDone" class="text-xl font-bold text-neon-green font-mono">0</p></div>
+      <div class="glass rounded-lg p-3 text-center"><p class="text-[10px] text-slate-500">Total Visits</p><p id="mdVisitsTotal" class="text-xl font-bold text-white font-mono">0</p></div>
+      <div class="glass rounded-lg p-3 text-center"><p class="text-[10px] text-slate-500">Next Service</p><p id="mdNextService" class="text-sm font-bold text-neon-blue font-mono">-</p></div>
+      <div class="glass rounded-lg p-3 text-center"><p class="text-[10px] text-slate-500">Quarter</p><p id="mdNextQuarter" class="text-sm font-bold text-slate-400 font-mono">-</p></div>
+    </div>
+    <div class="glass rounded-lg p-4 mb-4">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-slate-400">Health Score</span>
+        <span id="mdHealthScore" class="text-xl font-bold text-neon-green font-mono">100</span>
+      </div>
+      <div class="w-full bg-slate-700 rounded-full h-2"><div id="mdHealthBar" class="bg-neon-green h-2 rounded-full transition-all" style="width:100%"></div></div>
+    </div>
+    <div class="mb-4">
+      <h4 class="text-sm font-bold text-white mb-2">Service History</h4>
+      <div id="machineHistoryList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+    </div>
+    <div class="mb-4">
+      <h4 class="text-sm font-bold text-white mb-2">Predictions</h4>
+      <div id="machinePredictions" class="glass rounded-lg p-3 text-xs text-slate-400"></div>
+    </div>
+    <div style="height:200px;"><canvas id="machineTrendChart"></canvas></div>
+  </div>
+</div>
+
+<!-- Change Log Modal -->
+<div id="changeLogModal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-content relative max-w-lg">
+    <button class="close-btn" onclick="closeChangeLogModal()"><i class="fas fa-times"></i></button>
+    <h2 class="text-xl font-bold text-white mb-4">Change Log</h2>
+    <div id="changeLogList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+  </div>
+</div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script type="module" src="src/app.js"></script>
+
 </body>
 </html>

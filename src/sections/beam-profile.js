@@ -8,6 +8,9 @@ import { parseDate, addDays, formatWeek, formatDate } from '../core/dates.js';
 import { calculateContractHealth, calculateFleetHealth, getNextMilestone } from '../core/health.js';
 import { buildSchedule } from '../core/schedule.js';
 
+let machineTrendChart = null;
+
+
 // ===================== BEAM PROFILE MONITOR FUNCTIONS =====================
 function renderBeamProfileReport() {
   const container = document.getElementById('beamProfileReport');

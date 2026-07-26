@@ -276,7 +276,7 @@ function saveParameters() {
 }
 
 // ===================== CHARTS =====================
-let radarChart, barChart, trendChart;
+let radarChart, barChart, trendChart, cdaChart, coolingChart;
 
 function updateCharts() {
   saveParameters();
