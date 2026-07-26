@@ -1,0 +1,19 @@
+{
+  "name": "eo-fse-dashboard",
+  "private": true,
+  "version": "8.0.0-a4.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0",
+    "@tailwindcss/vite": "^4.0.0"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.1",
+    "zod": "^3.23.8"
+  }
+}
