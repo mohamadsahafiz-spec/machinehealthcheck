@@ -28,24 +28,4 @@ window.__importContract = async function(input) {
   input.value = '';
 };
 
-function triggerRenderAll() {
-  updateSidebarInfo();
-  renderMachineSequence();
-  renderKPIs();
-  renderMachineCards();
-  renderTimeline();
-  renderAlerts();
-  renderParams();
-  renderSpareParts();
-  renderQuarterlyBudget();
-  renderTerms();
-  renderInsights();
-  renderLaserPowerMonitor();
-  renderLaserProfileMonitor();
-  renderViaImageReport();
-  renderBeamProfileReport();
-  renderFocusOptimization();
-  renderLaserDefocus();
-  renderPowerOffset();
-}
 
